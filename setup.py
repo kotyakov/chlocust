@@ -6,7 +6,7 @@ from setuptools import (
 
 setup(
     name='chlocust',
-    version=__import__('chlocust').__VERSION__,
+    version='0.1.4',
     packages=find_packages(exclude=('*.tests', '*.tests.*', 'tests.*', 'tests')),
     install_requires=(
         'locustio>=0.11.0',
