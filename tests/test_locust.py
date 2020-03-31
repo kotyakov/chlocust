@@ -20,7 +20,7 @@ class TestClickhouseLocust:
             m, em = mock.MagicMock(), mock.MagicMock(return_value=ret_val, side_effect=side_effect)
             m.attach_mock(em, 'execute')
             type(m).last_query = mock.PropertyMock(return_value=clickhouse_driver.client.QueryInfo())
-            monkeypatch.setattr('clickhouse_driver.Client', mock.MagicMock(return_value=m))
+            monkeypatch.setattr('chlocust.client.ClickhouseClient', mock.MagicMock(return_value=m))
             monkeypatch.setattr('locust.events.request_failure', mock.MagicMock())
             monkeypatch.setattr('locust.events.request_success', mock.MagicMock())
             return em

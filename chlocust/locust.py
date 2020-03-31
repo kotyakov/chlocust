@@ -4,7 +4,8 @@ import types
 import locust
 import locust.events
 import locust.exception
-import clickhouse_driver
+
+from . import client
 
 
 class ClickhouseResponse:
@@ -53,7 +54,7 @@ class ClickHouseLocust(locust.Locust):
         if self.host is None:
             raise locust.exception.LocustError('No host configured')
 
-        self._ch = clickhouse_driver.Client(self.host, **self.clickhouse_settings)
+        self._ch = client.ClickhouseClient(self.host, **self.clickhouse_settings)
         self.client = self
 
     def query(self, query, params=None, name=None, **kwargs):
@@ -65,14 +66,14 @@ class ClickHouseLocust(locust.Locust):
             resp = self._ch.execute(query, params=params, **kwargs)
             return ClickhouseResponse(
                 resp=resp,
-                elapsed=self._ch.last_query.elapsed*1000,  # seconds to milliseconds
+                elapsed=self._ch.last_query.elapsed * 1000,  # seconds to milliseconds
                 name=name,
                 is_insert=is_insert,
             )
         except Exception as e:
             return ClickhouseResponse(
                 resp=None,
-                elapsed=(time.time() - start)*1000,  # seconds to milliseconds
+                elapsed=(time.time() - start) * 1000,  # seconds to milliseconds
                 name=name,
                 is_insert=is_insert,
                 exc=e,
