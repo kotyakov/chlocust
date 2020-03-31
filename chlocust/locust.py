@@ -65,14 +65,14 @@ class ClickHouseLocust(locust.Locust):
             resp = self._ch.execute(query, params=params, **kwargs)
             return ClickhouseResponse(
                 resp=resp,
-                elapsed=self._ch.last_query.elapsed,
+                elapsed=self._ch.last_query.elapsed*1000,  # seconds to milliseconds
                 name=name,
                 is_insert=is_insert,
             )
         except Exception as e:
             return ClickhouseResponse(
                 resp=None,
-                elapsed=time.time() - start,
+                elapsed=(time.time() - start)*1000,  # seconds to milliseconds
                 name=name,
                 is_insert=is_insert,
                 exc=e,
